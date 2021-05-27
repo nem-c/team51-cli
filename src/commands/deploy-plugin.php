@@ -122,7 +122,7 @@ class Deploy_Plugin extends Command {
 
 			$output->writeln( "<comment>Uploading plugin.</comment>" );
 
-			$php_errors = $sftp_connection->put( '/htdocs/wp-content/plugins/plugin-autoupdate-filter/', TEAM51_CLI_ROOT_DIR . "/scaffold/templates/plugin-autoupdate-filter/", SFTP::SOURCE_LOCAL_FILE );
+			$sftp_connection->put( '/htdocs/wp-content/plugins/plugin-autoupdate-filter/', TEAM51_CLI_ROOT_DIR . "/scaffold/templates/plugin-autoupdate-filter/", SFTP::SOURCE_LOCAL_FILE );
 
 			$output->writeln( "<comment>Removing bot collaborator.</comment>" );
 
