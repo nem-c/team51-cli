@@ -120,9 +120,20 @@ class Deploy_Plugin extends Command {
 				exit;
 			}
 
-			$output->writeln( "<comment>Uploading plugin.</comment>" );
+			$sftp_connection->chdir( '/htdocs/wp-content/plugins/' );
+			
+			if ( $sftp_connection->is_dir( 'plugin-autoupdate-filter' ) ) {
+				$output->writeln( "Plugin folder already exists. Overwriting plugin files now." );
+			} else {
+				$output->writeln( "<comment>Creating plugin directory.</comment>" );
+				$make_dir = $sftp_connection->mkdir( 'plugin-autoupdate-filter' );
+				if ( false === $make_dir ) $output->writeln( "<comment>Failed to make directory via SFTP.</comment>" );
+			}
 
-			$sftp_connection->put( '/htdocs/wp-content/plugins/plugin-autoupdate-filter/', TEAM51_CLI_ROOT_DIR . "/scaffold/templates/plugin-autoupdate-filter/", SFTP::SOURCE_LOCAL_FILE );
+			$output->writeln( "<comment>Uploading plugin files.</comment>" );
+			$sftp_connection->put( '/htdocs/wp-content/plugins/plugin-autoupdate-filter/class-plugin-autoupdate-filter.php', TEAM51_CLI_ROOT_DIR . "/scaffold/templates/plugin-autoupdate-filter/class-plugin-autoupdate-filter.php", SFTP::SOURCE_LOCAL_FILE );
+			$sftp_connection->put( '/htdocs/wp-content/plugins/plugin-autoupdate-filter/plugin-autoupdate-filter.php', TEAM51_CLI_ROOT_DIR . "/scaffold/templates/plugin-autoupdate-filter/plugin-autoupdate-filter.php", SFTP::SOURCE_LOCAL_FILE );
+			$sftp_connection->put( '/htdocs/wp-content/plugins/plugin-autoupdate-filter/README.md', TEAM51_CLI_ROOT_DIR . "/scaffold/templates/plugin-autoupdate-filter/README.md", SFTP::SOURCE_LOCAL_FILE );
 
 			$output->writeln( "<comment>Removing bot collaborator.</comment>" );
 
